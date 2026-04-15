@@ -92,7 +92,7 @@ export function ModelSelector({
                         variant="ghost"
                         role="combobox"
                         aria-expanded={open}
-                        className={cn("h-8 justify-between gap-2 px-2 text-xs hover:bg-accent", className)}
+                        className={cn("h-8 max-w-[60vw] justify-between gap-2 px-2 text-xs hover:bg-accent sm:max-w-none", className)}
                     >
                         <div className="flex items-center gap-1.5 min-w-0">
                             <Sparkles className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -104,7 +104,7 @@ export function ModelSelector({
                     </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-3xl p-0" align="start">
+                <PopoverContent className="w-[calc(100vw-1.5rem)] p-0 sm:w-xl lg:w-3xl" align="start">
                     <div className="p-3 border-b">
                         <div className="relative">
                             <Search
@@ -179,7 +179,7 @@ export function ModelSelector({
             </Popover >
 
             <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-                <DialogContent className="max-w-2xl h-[80vh] overflow-hidden flex flex-col">
+                <DialogContent className="h-[85vh] w-[calc(100vw-1.5rem)] max-w-2xl overflow-hidden flex flex-col sm:h-[80vh]">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5" />
@@ -201,7 +201,7 @@ export function ModelSelector({
                                 {/* Context & Capabilities */}
                                 <div>
                                     <h3 className="text-sm font-semibold mb-3">Context & Capabilities</h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                         <div className="space-y-1">
                                             <p className="text-xs text-muted-foreground">Context Length</p>
                                             <p className="text-sm font-medium">
@@ -232,7 +232,7 @@ export function ModelSelector({
                                 {/* Input/Output Modalities */}
                                 <div>
                                     <h3 className="text-sm font-semibold mb-3">Supported Modalities</h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                         <div className="space-y-2">
                                             <p className="text-xs text-muted-foreground">Input Modalities</p>
                                             <div className="flex flex-wrap gap-1">
@@ -269,7 +269,7 @@ export function ModelSelector({
                                             <p className="text-sm text-muted-foreground">This model is completely free to use</p>
                                         </div>
                                     ) : (
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                             {Object.entries(selectedForDetails.pricing).map(([key, value]) => {
                                                 if (value === "0") return null
                                                 return (

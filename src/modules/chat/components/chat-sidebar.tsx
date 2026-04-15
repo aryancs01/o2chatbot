@@ -47,7 +47,6 @@ interface ChatSidebarProps {
 }
 
 const ChatSidebar = ({ user, chats }: ChatSidebarProps) => {
-    console.log("chats", chats, "user", user)
     const { activeChatId } = useChatStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(activeChatId);
@@ -122,7 +121,7 @@ const ChatSidebar = ({ user, chats }: ChatSidebarProps) => {
                 <Link className={cn(
                     "block rounded-lg px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent transition-colors",
                     chat.id === activeChatId && "bg-sidebar-accent"
-                )} href={`chat/${chat.id}`} key={chat.id}>
+                )} href={`/chat/${chat.id}`} key={chat.id}>
                     <div className="flex flex-row justify-between items-center gap-2">
                         <span className="flex-1 truncate">{chat.title}</span>
                         <DropdownMenu>
@@ -160,7 +159,7 @@ const ChatSidebar = ({ user, chats }: ChatSidebarProps) => {
         ))
     }
     return (
-        <div className="flex h-full w-64 flex-col border-r border-border bg-sidebar">
+        <div className="flex h-full w-full sm:w-64 flex-col border-r border-border bg-sidebar">
             <div className="flex items-center justify-between border-b border-sidebar-border px-2 py-2">
                 <div className="flex items-center gap-2">
                     <span
