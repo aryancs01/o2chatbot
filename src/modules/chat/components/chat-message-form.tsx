@@ -7,19 +7,25 @@ import { useAIModels } from "@/modules/ai-agent/hook/ai-agent";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import { ModelSelector } from "./model-selector";
+import { useCreateChat } from "../hooks/chat";
+import { toast } from "sonner";
 
 const ChatMessageForm = ({ initialMessage }: { initialMessage: string }) => {
-    const {data: models, isPending} = useAIModels();
+    const { data: models, isPending } = useAIModels();
     const [selectedModel, setSelectedModel] = useState<string | undefined>(models?.models[0]?.id);
     const [message, setMessage] = useState(initialMessage);
+    const { mutateAsync, isPending: isChatPending } = useCreateChat();
 
     const handleSubmit = async (e: React.FormEvent) => {
         try {
             e.preventDefault();
-            console.log("Message submitted:", message);
+            await mutateAsync({ content: message, model: selectedModel || "" });
+            toast.success("Chat created successfully!");
+
+        } catch {
+            toast.error("Failed to create chat. Please try again.");
+        } finally {
             setMessage("");
-        } catch (error) {
-            console.error("Error submitting message:", error);
         }
     }
 
@@ -48,23 +54,28 @@ const ChatMessageForm = ({ initialMessage }: { initialMessage: string }) => {
                                         <Spinner />
                                     </>
                                 ) : (
-                                   <ModelSelector models={models?.models}
-                                   onModelSelect={setSelectedModel}
-                                   selectedModelId={selectedModel}
-                                   /> 
+                                    <ModelSelector models={models?.models}
+                                        onModelSelect={setSelectedModel}
+                                        selectedModelId={selectedModel}
+                                    />
                                 )
                             }
                         </div>
-                         <Button
-                        type="submit"
-                        disabled={!message.trim()}
-                        size="sm"
-                        variant={message.trim() ? "default" : "ghost"}
-                        className="h-8 w-8 p-0 rounded-full"
-                    >
-                        <Send className="size-5" />
-                        <span className="sr-only">Send</span>
-                    </Button>
+                        <Button
+                            type="submit"
+                            disabled={!message.trim()}
+                            size="sm"
+                            variant={message.trim() ? "default" : "ghost"}
+                            className="h-8 w-8 p-0 rounded-full"
+                        >
+                            {isChatPending ? <>
+                                <Spinner />
+                            </> : <>
+                                <Send className="size-5" />
+                                <span className="sr-only">Send</span>
+                            </>
+                            }
+                        </Button>
                     </div>
                 </div>
             </form>
