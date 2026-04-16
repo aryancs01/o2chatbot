@@ -4,6 +4,7 @@ import { MessageRole, MessageType } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { CHAT_SYSTEM_PROMPT } from "@/lib/prompt";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 const provider = createOpenRouter({
   apiKey: process.env.OPENROUTER_API!,
@@ -96,6 +97,25 @@ function extractPartsAsJSON(message: UIMessage): string {
 
 export async function POST(request: Request) {
   try {
+    const clientIp = getClientIp(request);
+    const limit = await rateLimit(`chat:${clientIp}`, 5, 60_000);
+
+    if (!limit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Rate limited: maximum 5 requests per minute.",
+          retryAfter: limit.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(limit.retryAfterSeconds),
+          },
+        },
+      );
+    }
+
     const {
       chatId,
       messages: newMessages,
