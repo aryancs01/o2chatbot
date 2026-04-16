@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ModelSelector } from "./model-selector";
 import { useCreateChat } from "../hooks/chat";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const ChatMessageForm = ({ initialMessage }: { initialMessage: string }) => {
     const { data: models, isPending } = useAIModels();
@@ -16,14 +17,21 @@ const ChatMessageForm = ({ initialMessage }: { initialMessage: string }) => {
     const [message, setMessage] = useState(initialMessage);
     const { mutateAsync, isPending: isChatPending } = useCreateChat();
 
+    const router = useRouter();
+
     const handleSubmit = async (e: React.FormEvent) => {
         try {
             e.preventDefault();
-            await mutateAsync({ content: message, model: selectedModel || "" });
-            toast.success("Chat created successfully!");
-
+            const res = await mutateAsync({ content: message, model: selectedModel || "" });
+            
+            if (res && res.success && res.data) {
+                toast.success("Chat created successfully!");
+                router.push(`/chat/${res.data.id}?autoTrigger=true`);
+            } else {
+                toast.error(res?.message || "Failed to create chat. Please try again.");
+            }
         } catch {
-            toast.error("Failed to create chat. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.");
         } finally {
             setMessage("");
         }

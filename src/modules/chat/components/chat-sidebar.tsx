@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import UserButton from "@/modules/authentication/components/user-button"
 
 import { cn } from "@/lib/utils"
-import { PlusIcon, SearchIcon, Trash2Icon, Ellipsis } from "lucide-react"
+import { PlusIcon, SearchIcon, Trash2Icon, Ellipsis, Wand2 } from "lucide-react"
 import { useChatStore } from "../store/chat-store"
 import DeleteChatModal from "./chat-delete-modal"
 
@@ -171,11 +171,17 @@ const ChatSidebar = ({ user, chats }: ChatSidebarProps) => {
                 </div>
             </div>
 
-            <div className="p-4">
+            <div className="p-4 flex flex-col gap-2">
                 <Link href={"/"}>
                     <Button className="w-full">
                         <PlusIcon className="mr-2 h-4 w-4" />
                         New Chat
+                    </Button>
+                </Link>
+                <Link href={"/sandbox"}>
+                    <Button variant="secondary" className="w-full border border-border">
+                        <Wand2 className="mr-2 h-4 w-4 text-primary" />
+                        Try E2B Sandbox
                     </Button>
                 </Link>
             </div>
